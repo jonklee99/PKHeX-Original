@@ -86,6 +86,30 @@ public sealed class TrainerDatabase
     }
 
     /// <summary>
+    /// Fetches an appropriate trainer based on the requested generation number.
+    /// </summary>
+    /// <param name="generation">Generation number the trainer should inhabit</param>
+    /// <param name="lang">Language to request for</param>
+    /// <returns>Null if no trainer found for this generation.</returns>
+    public ITrainerInfo? GetTrainerFromGen(byte generation, LanguageID? lang = null)
+    {
+        var possible = Database.Where(z => z.Key.Generation == generation).ToList();
+        if (possible.Count == 0)
+            return null;
+
+        if (lang is not null)
+        {
+            possible = possible.Select(z =>
+            {
+                var filtered = z.Value.Where(x => x.Language == (int)lang).ToList();
+                return new KeyValuePair<GameVersion, List<ITrainerInfo>>(z.Key, filtered);
+            }).Where(z => z.Value.Count != 0).ToList();
+        }
+        var span = CollectionsMarshal.AsSpan(possible);
+        return GetRandomTrainer(span);
+    }
+
+    /// <summary>
     /// Fetches an appropriate trainer based on the requested <see cref="context"/>.
     /// </summary>
     /// <param name="context">Generation the trainer should inhabit</param>

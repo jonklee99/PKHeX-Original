@@ -11,6 +11,11 @@ public interface IBattleTemplate : ISpeciesForm, IGigantamaxReadOnly, IDynamaxLe
     EntityContext Context { get; }
 
     /// <summary>
+    /// Generation number of the Set entity.
+    /// </summary>
+    byte Generation => Context.Generation;
+
+    /// <summary>
     /// <see cref="PKM.Nickname"/> of the Set entity.
     /// </summary>
     string Nickname { get; }

@@ -266,6 +266,10 @@ public static class GameUtil
         return Array.FindAll(GameVersions, z => z.Context == context);
     }
 
+    /// <inheritdoc cref="GetVersionsWithinRange(IGameValueLimit, EntityContext)"/>
+    public static IEnumerable<GameVersion> GetVersionsWithinRange(IGameValueLimit obj, byte generation)
+        => GetVersionsWithinRange(obj, (EntityContext)generation);
+
     /// <summary>
     /// List of possible <see cref="GameVersion"/> values within the provided <see cref="IGameValueLimit"/> criteria.
     /// </summary>
