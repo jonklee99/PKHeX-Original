@@ -36,7 +36,7 @@ public partial class ExperienceBar : UserControl
         if (range == 0 || maxWidth <= 0)
             return start;
 
-        var progress = (uint)(((long)width * range) / maxWidth);
+        var progress = (uint)((width * range) / maxWidth);
         if (progress >= range)
             progress = range - 1;
         return start + progress;
@@ -113,13 +113,18 @@ public partial class ExperienceBar : UserControl
         ShowHover(x);
     }
 
+    private int lastMouseMoveX = int.MinValue;
+
     private void HandleMouseMove(object? sender, MouseEventArgs e)
     {
         var x = GetRelativeX(sender, e);
+        if (x == lastMouseMoveX)
+            return;
         if (IsDragging && e.Button.HasFlag(MouseButtons.Left))
             SetBoundedPixelPercent(x);
 
         ShowHover(x);
+        lastMouseMoveX = x;
     }
 
     private void HandleMouseUp(object? sender, MouseEventArgs e)
@@ -132,7 +137,7 @@ public partial class ExperienceBar : UserControl
         ShowHover(GetRelativeX(sender, e));
     }
 
-    private void HandleMouseEnter(object? sender, EventArgs e) => ShowHover(PAN_ExpPercent.Width + Border);
+    private void HandleMouseEnter(object? sender, EventArgs e) => ShowHover(PointToClient(MousePosition).X);
 
     private void HandleMouseLeave(object? sender, EventArgs e)
     {
